@@ -1,0 +1,28 @@
+<!-- templates/index.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Chat with AI</title>
+</head>
+<body>
+    <h1>Chat with AI</h1>
+    <a href="{% url 'new-chat' %}">New chat</a>
+    <div class="chat-history">
+        {% if messages %}
+            {% for message in messages %}
+                {% if message.is_user %}
+                    <div class="user-message"><strong> You: {{ message.text|safe }} </strong></div>
+                {% else %}
+                    <div class="ai-message"><strong>AI:</strong> {{ message.text|safe }}</div>
+                {% endif %}
+            {% endfor %}
+        {% endif %}
+    </div>
+    
+    <form method="POST" action="{% url 'talk' %}">
+        {% csrf_token %}
+        <input type="text" name="message" placeholder="Type your message..." required>
+        <button type="submit">Send</button>
+    </form>
+</body>
+</html>
