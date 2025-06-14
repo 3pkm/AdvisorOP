@@ -30,6 +30,12 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+# Add your frontend origin to CSRF_TRUSTED_ORIGINS
+CSRF_TRUSTED_ORIGINS = [
+    'http://localhost:5173',
+    'http://127.0.0.1:5173',
+]
+
 
 # Application definition
 
@@ -40,17 +46,20 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'talkToAI',  # Add your talkToAI app here
+    'corsheaders',  # Add this
+    'talkToAI',  # Your app
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware', # Moved higher
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    # 'corsheaders.middleware.CorsMiddleware',  # Remove from here if moved up
 ]
 
 ROOT_URLCONF = 'chatApp.urls'
@@ -119,9 +128,31 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
+
+# Add this to tell Django where your React build's static files are
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, '..', 'Frontend', 'dist', 'assets'),  # For Vite, assets are often here
+]
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+# CORS Configuration
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:5173",  # For Vite React dev server
+    "http://127.0.0.1:5173",  # For Vite React dev server
+    # Add your production frontend URL here when you deploy
+]
+# Or, for more open development (less secure for production):
+# CORS_ALLOW_ALL_ORIGINS = True # Ensure this is commented out if using CORS_ALLOWED_ORIGINS
+
+CORS_ALLOW_CREDENTIALS = True # Add this line
+
+# If you have CSRF_COOKIE_SAMESITE set, ensure it's compatible with cross-origin requests if needed,
+# though for localhost development, 'Lax' (default) is usually fine.
+# CSRF_COOKIE_SAMESITE = 'Lax'
+# CSRF_COOKIE_SECURE = False # Should be False for HTTP development

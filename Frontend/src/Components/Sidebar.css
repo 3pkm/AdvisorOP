@@ -1,0 +1,219 @@
+@import url("https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&family=Outfit:wght@100..900&display=swap");
+
+.sidebar {
+  height: 100vh; /* Full viewport height */
+  background-color: #3a5a5f; /* Lighter teal-gray to match theme */
+  color: #ffffff; /* White text for contrast */
+  display: flex;
+  flex-direction: column; /* Vertical stacking */
+  width: 64px; /* Default collapsed width */
+  transition: width 0.3s ease, background-color 0.3s ease, transform 0.3s ease; /* Smooth transitions */
+  font-family: "Nunito", sans-serif; /* Consistent font */
+}
+
+.sidebar:hover {
+  background-color: #406066; /* Slightly lighter teal-gray on hover */
+  transform: scale(1.01); /* Subtle scale effect on hover */
+}
+
+.sidebar.extended {
+  width: 256px; /* Extended width */
+}
+
+.sidebar.collapsed {
+  width: 64px; /* Collapsed width */
+}
+
+.sidebar.collapsed .new-chat p,
+.sidebar.collapsed .recent-entry p,
+.sidebar.collapsed .bottom-item p {
+  display: none; /* Hide text when collapsed */
+}
+
+.top {
+  padding: 1rem; /* Top section padding */
+  flex: 1; /* Fill available space */
+  display: flex;
+  flex-direction: column; /* Vertical layout */
+  gap: 1rem; /* Spacing between items */
+}
+
+.menu {
+  display: flex;
+  align-items: center; /* Center icon vertically */
+  justify-content: flex-start; /* Left positioning */
+  height: 48px; /* Fixed height */
+  padding-left: 1px; /* Icon adjustment */
+  transition: background-color 0.3s ease, transform 0.2s ease; /* Smooth transitions */
+}
+
+.menu:hover {
+  background-color: #406066; /* Lighter teal-gray on hover */
+  transform: translateX(5px); /* Slight shift to the right for interactivity */
+}
+
+.menu-icon {
+  width: 32px; /* Updated icon size */
+  height: 32px; /* Ensure height matches width for circular background */
+  filter: invert(100%); /* Ensure the icon is white */
+  opacity: 0.8; /* Base opacity for visibility */
+  background-color: rgba(
+    255,
+    255,
+    255,
+    0.2
+  ); /* White background with slight transparency */
+  border-radius: 50%; /* Circular background */
+  padding: 6px; /* Adjusted padding for larger icon */
+  cursor: pointer; /* Indicate clickability */
+  transition: opacity 0.3s ease, transform 0.2s ease, background-color 0.3s ease; /* Smooth transitions */
+}
+
+.menu-icon:hover {
+  opacity: 1; /* Full opacity on hover */
+  transform: scale(1.1); /* Slight zoom effect */
+  background-color: rgba(
+    255,
+    255,
+    255,
+    0.4
+  ); /* Brighter white background on hover */
+}
+
+.icon {
+  width: 32px; /* Updated icon size */
+  height: 32px; /* Ensure height matches width for circular background */
+  filter: invert(100%); /* Ensure the icon is white */
+  opacity: 0.8; /* Base opacity for visibility */
+  background-color: rgba(
+    255,
+    255,
+    255,
+    0.2
+  ); /* White background with slight transparency */
+  border-radius: 50%; /* Circular background */
+  padding: 6px; /* Adjusted padding for larger icon */
+  cursor: pointer; /* Indicate clickability */
+  transition: opacity 0.3s ease, transform 0.2s ease, background-color 0.3s ease; /* Smooth transitions */
+}
+
+.icon:hover {
+  opacity: 1; /* Full opacity on hover */
+  transform: scale(1.1); /* Slight zoom effect */
+  background-color: rgba(
+    255,
+    255,
+    255,
+    0.4
+  ); /* Brighter white background on hover */
+}
+
+.new-chat {
+  display: flex;
+  align-items: center; /* Center icon and text */
+  gap: 0.5rem; /* Spacing between icon and text */
+  padding: 1rem; /* Adjusted padding for better spacing */
+  height: 56px; /* Fixed height */
+  border-radius: 8px; /* Rounded corners */
+  cursor: pointer; /* Indicate clickability */
+  transition: background-color 0.3s ease, transform 0.2s ease; /* Smooth transitions */
+}
+
+.new-chat:hover {
+  background-color: #406066; /* Lighter teal-gray on hover */
+  transform: translateY(-2px); /* Slight lift effect */
+}
+
+.new-chat p {
+  font-size: 1rem; /* Text size */
+  font-weight: 500; /* Medium weight */
+  color: #ffffff; /* White text */
+  transition: color 0.3s ease; /* Smooth color transition */
+}
+
+.new-chat:hover p {
+  color: #e0e0e0; /* Slightly lighter white on hover */
+}
+
+.recent {
+  margin-top: 1rem; /* Space above recent section */
+}
+
+.recent-title {
+  font-size: 1rem; /* Title size */
+  font-weight: 600; /* Bold title */
+  color: #c0c0c0; /* Light gray for title */
+  padding: 0.5rem 1rem; /* Padding for title */
+  cursor: default; /* Non-interactive */
+  transition: color 0.3s ease; /* Smooth transition */
+}
+
+.recent-title:hover {
+  color: #d0d0d0; /* Slightly lighter gray on hover */
+}
+
+.recent-entry {
+  display: flex;
+  align-items: center; /* Center icon and text */
+  gap: 0.5rem; /* Spacing between icon and text */
+  padding: 0.75rem 1rem; /* Padding for entries */
+  border-radius: 8px; /* Rounded corners */
+  cursor: pointer; /* Indicate clickability */
+  transition: background-color 0.3s ease, transform 0.2s ease; /* Smooth transitions */
+}
+
+.recent-entry:hover {
+  background-color: #406066; /* Lighter teal-gray on hover */
+  transform: translateY(-2px); /* Slight lift effect */
+}
+
+.recent-entry p {
+  font-size: 0.9rem; /* Text size for entries */
+  color: #e0e0e0; /* Light gray text */
+  white-space: nowrap; /* Prevent text wrapping */
+  overflow: hidden; /* Hide overflow */
+  text-overflow: ellipsis; /* Add ellipsis for overflow */
+  transition: color 0.3s ease; /* Smooth color transition */
+}
+
+.recent-entry:hover p {
+  color: #ffffff; /* White text on hover */
+}
+
+.bottom {
+  padding: 1rem; /* Padding for bottom section */
+  display: flex;
+  flex-direction: column; /* Vertical stacking */
+  gap: 0.75rem; /* Spacing between items */
+  border-top: 1px solid #4a6a6f; /* Separator line */
+  transition: border-color 0.3s ease; /* Smooth transition */
+}
+
+.bottom:hover {
+  border-top-color: #507075; /* Slightly lighter border on hover */
+}
+
+.bottom-item {
+  display: flex;
+  align-items: center; /* Center icon and text */
+  gap: 0.5rem; /* Spacing between icon and text */
+  padding: 0.75rem 1rem; /* Padding for items */
+  border-radius: 8px; /* Rounded corners */
+  cursor: pointer; /* Indicate clickability */
+  transition: background-color 0.3s ease, transform 0.2s ease; /* Smooth transitions */
+}
+
+.bottom-item:hover {
+  background-color: #406066; /* Lighter teal-gray on hover */
+  transform: translateY(-2px); /* Slight lift effect */
+}
+
+.bottom-item p {
+  font-size: 0.9rem; /* Text size for items */
+  color: #e0e0e0; /* Light gray text */
+  transition: color 0.3s ease; /* Smooth color transition */
+}
+
+.bottom-item:hover p {
+  color: #ffffff; /* White text on hover */
+}
