@@ -25,7 +25,8 @@ function App() {
     const [messages, setMessages] = useState([]);
     const [inputValue, setInputValue] = useState('');
     const [charCount, setCharCount] = useState(0);
-    const [isLoading, setIsLoading] = useState(false); // Added isLoading state
+    const [isLoading, setIsLoading] = useState(false);
+    const [sidebarExtended, setSidebarExtended] = useState(false);
     const chatHistoryRef = useRef(null);
 
     // Fetch initial chat data and ensure CSRF cookie is set
@@ -62,17 +63,7 @@ function App() {
         setInputValue(event.target.value);
     };
 
-    const handleSendMessage = async (eventOrValue) => {
-        let messageToSend = '';
-        if (typeof eventOrValue === 'string') {
-            messageToSend = eventOrValue;
-        } else if (eventOrValue && typeof eventOrValue.preventDefault === 'function') {
-            eventOrValue.preventDefault();
-            messageToSend = inputValue;
-        } else {
-            messageToSend = inputValue; 
-        }
-
+    const handleSendMessage = async (messageToSend) => {
         if (!messageToSend.trim()) return;
 
         const csrftoken = getCookie('csrftoken');
@@ -82,23 +73,24 @@ function App() {
             return;
         }
 
-        const formData = new FormData();
-        formData.append('message', messageToSend);
-
+        // Add user message immediately
         const optimisticUserMessage = {
             text: messageToSend,
             is_user: true,
             timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
         };
         setMessages(prevMessages => [...prevMessages, optimisticUserMessage]);
-        if (typeof eventOrValue !== 'string') {
-             setInputValue('');
-             setCharCount(0); // Reset char count as well
-        }
         
-        setIsLoading(true); // Set loading to true before sending
+        // Clear input immediately after sending
+        setInputValue('');
+        setCharCount(0);
+        
+        setIsLoading(true);
 
         try {
+            const formData = new FormData();
+            formData.append('message', messageToSend);
+
             const response = await fetch(`${API_BASE_URL}/talk/`, {
                 method: 'POST',
                 headers: { 'X-CSRFToken': csrftoken },
@@ -111,12 +103,24 @@ function App() {
             }
 
             const data = await response.json();
-            setMessages(prevMessages => [...prevMessages, { text: data.response, is_user: false, timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) }]);
+            
+            // Add AI response immediately when received
+            const aiMessage = {
+                text: data.response,
+                is_user: false,
+                timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+            };
+            setMessages(prevMessages => [...prevMessages, aiMessage]);
+            
         } catch (error) {
             console.error('Error sending message:', error);
-            setMessages(prevMessages => [...prevMessages, { text: "Sorry, I couldn't connect to the AI. Please try again.", is_user: false, timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) }]);
+            setMessages(prevMessages => [...prevMessages, { 
+                text: "Sorry, I couldn't connect to the AI. Please try again.", 
+                is_user: false, 
+                timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) 
+            }]);
         } finally {
-            setIsLoading(false); // Set loading to false after response or error
+            setIsLoading(false);
         }
     };
 
@@ -131,14 +135,18 @@ function App() {
 
     return (
         <>
-            <SideBar handleNewChat={handleNewChat} />
+            <SideBar 
+                handleNewChat={handleNewChat} 
+                onToggle={setSidebarExtended}
+            />
             <MainBar
                 messages={messages}
                 inputValue={inputValue}
                 charCount={charCount}
                 onInputChange={handleInputChange}
                 onSendMessage={handleSendMessage}
-                isLoading={isLoading} // Pass isLoading state
+                isLoading={isLoading}
+                sidebarExtended={sidebarExtended}
             />
         </>
     );

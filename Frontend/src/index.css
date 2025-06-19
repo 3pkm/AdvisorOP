@@ -1,11 +1,64 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap');
+
+:root {
+  --font-family: 'Poppins', sans-serif;
+
+  --primary-bg: #1d2d3f; /* Deep blue */
+  --secondary-bg: #2a3f54; /* Slightly lighter blue for sidebar/search */
+  --tertiary-bg: #3a506b; /* Even lighter blue for AI message bubbles and hovers */
+
+  --accent-gradient: linear-gradient(135deg, #3498db 0%, #8e44ad 100%); /* Blue to purple */
+  --accent-color-1: #3498db; /* Bright Blue */
+  --accent-color-2: #8e44ad; /* Purple */
+
+  --text-primary: #ffffff;
+  --text-secondary: #b0c4de; /* Light steel blue for secondary text */
+  --text-placeholder: #7a8a99;
+
+  --border-color: #2a3f54;
+  --shadow-color: rgba(0, 0, 0, 0.3);
+  --glow-color: rgba(52, 152, 219, 0.4);
+
+  --border-radius-sm: 8px;
+  --border-radius-md: 12px;
+  --border-radius-lg: 16px;
+
+  --transition-fast: 0.2s ease;
+  --transition-medium: 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
 * {
-  padding: 0%;
-  margin: 0%;
+  margin: 0;
+  padding: 0;
   box-sizing: border-box;
-  font-family: Outfit;
+}
+
+body {
+  font-family: var(--font-family);
+  background-color: var(--primary-bg);
+  color: var(--text-primary);
+  overflow: hidden; /* Prevents scrollbars on the body itself */
 }
 
 #root {
-  min-height: 100vh;
   display: flex;
+  min-height: 100vh;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--secondary-bg);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--tertiary-bg);
+  border-radius: var(--border-radius-sm);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--accent-color-2);
 }

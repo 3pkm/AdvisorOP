@@ -21,32 +21,14 @@ def talk(request):
         # Initialize session variables if they don't exist
         if 'messages' not in request.session:
             request.session['messages'] = []
-            # Optionally, send an initial AI greeting if messages are empty
-            # and chat_history is not yet initialized.
-            if 'chat_history' not in request.session:
-                initial_greeting = "Hello, I'm Athena. I'm here to help you explore your thoughts and feelings by thinking them through together in a supportive way. How are you feeling today, and what's on your mind?"
-                request.session['messages'].append({"text": initial_greeting, "is_user": False, "timestamp": datetime.now().strftime("%H:%M")})
 
         if 'char_count' not in request.session:
             request.session['char_count'] = 0
         
-        # For GET, just return current state
-        messages_to_send = request.session['messages']
-        # Process bold text formatting for messages being sent to frontend
-        for m in messages_to_send:
-            text = m.get("text", "")
-            # Ensure text is a string
-            if not isinstance(text, str):
-                text = str(text)
-            while "**" in text:
-                text = text.replace("**", "<strong>", 1)
-                if "**" in text:
-                    text = text.replace("**", "</strong>", 1)
-            m["text"] = text
-
+        # For GET, return empty messages to prevent loading old chats on page reload
         return JsonResponse({
-            "messages": messages_to_send,
-            "char_count": request.session.get('char_count', 0)
+            "messages": [],  # Always return empty for GET to avoid old chats
+            "char_count": 0
         })
 
     # POST request handling remains largely the same but returns JSON
@@ -94,32 +76,41 @@ def talk(request):
             try:
                 response = chat.send_message(user_message)
                 ai_message = response.text
+                
+                # Process bold text formatting for AI message
+                while "**" in ai_message:
+                    ai_message = ai_message.replace("**", "<strong>", 1)
+                    if "**" in ai_message:
+                        ai_message = ai_message.replace("**", "</strong>", 1)
+                
                 messages.append({"text": ai_message, "is_user": False, "timestamp": datetime.now().strftime("%H:%M")})
+                
+                # Update session
+                request.session['messages'] = messages
+                request.session['chat_history_serialized'] = [{"role": p.role, "parts": [pt.text for pt in p.parts]} for p in chat.history]
+                request.session.modified = True
+                
+                # Return only the AI response for frontend
+                return JsonResponse({
+                    "response": ai_message,
+                    "timestamp": datetime.now().strftime("%H:%M")
+                })
 
             except Exception as e:
-                messages.append({"text": f"Error: {str(e)} - Could not get response from AI.", "is_user": False, "timestamp": datetime.now().strftime("%H:%M")})
-            
-            request.session['messages'] = messages
-            # Update serialized chat history
-            request.session['chat_history_serialized'] = [{"role": p.role, "parts": [pt.text for pt in p.parts]} for p in chat.history]
-            request.session.modified = True
+                error_message = f"Error: {str(e)} - Could not get response from AI."
+                messages.append({"text": error_message, "is_user": False, "timestamp": datetime.now().strftime("%H:%M")})
+                request.session['messages'] = messages
+                request.session.modified = True
+                
+                return JsonResponse({
+                    "response": error_message,
+                    "timestamp": datetime.now().strftime("%H:%M")
+                })
 
-    # Process bold text formatting for messages being sent to frontend
-    # This should be done before returning the JsonResponse for POST as well
-    messages_to_send = request.session.get('messages', [])
-    for m in messages_to_send:
-        text = m.get("text", "")
-        if not isinstance(text, str):
-            text = str(text) # Ensure text is a string
-        while "**" in text:
-            text = text.replace("**", "<strong>", 1)
-            if "**" in text:
-                text = text.replace("**", "</strong>", 1)
-        m["text"] = text
-
+    # If no message provided
     return JsonResponse({
-        "messages": messages_to_send,
-        "char_count": request.session.get('char_count', 0)
+        "response": "No message provided",
+        "timestamp": datetime.now().strftime("%H:%M")
     })
 
 
