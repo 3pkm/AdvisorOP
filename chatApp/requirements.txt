@@ -1,0 +1,11 @@
+# Core Django Framework
+Django==5.1.7
+
+# Google Generative AI
+google-generativeai==0.8.4
+
+# Environment variable management
+python-decouple==3.8
+
+# CORS handling for API requests
+django-cors-headers==4.7.0

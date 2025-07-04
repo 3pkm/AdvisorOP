@@ -1,5 +1,3 @@
-/* App.css - Minimal styling for the cosmic mind theme */
-
 #root {
   display: flex;
   min-height: 100vh;
@@ -7,4 +5,3 @@
   padding: 0;
 }
 
-/* Remove any default App component styles that interfere with layout */
