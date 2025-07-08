@@ -5,6 +5,7 @@ from decouple import config
 from datetime import datetime
 from django.http import JsonResponse # Add this
 from django.views.decorators.csrf import ensure_csrf_cookie # Add this for sending CSRF token
+from django.views.decorators.http import require_http_methods # Add this for method restrictions
 
 # Set API key
 api_key = config('GEMINI_API_KEY')
@@ -49,7 +50,7 @@ def talk(request):
             },
             {
                 "role": "model", # Initial AI part for context
-                "parts": [{"text": "Hello, I'm Athena. I'm here to help you explore your thoughts and feelings by thinking them through together in a supportive way. How are you feeling today, and what's on your mind?"}]
+                "parts": [{"text": "Hello, I'm AdvisorOP. I'm here to help you explore your thoughts and feelings by thinking them through together in a supportive way. How are you feeling today, and what's on your mind?"}]
             }
         ]
         chat = model.start_chat(history=history)
@@ -114,6 +115,7 @@ def talk(request):
     })
 
 
+@require_http_methods(["POST"])
 def new_chat(request):
     if 'messages' in request.session:
         del request.session['messages']

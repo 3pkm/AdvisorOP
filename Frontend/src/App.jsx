@@ -1,5 +1,4 @@
 import { useState, useEffect, useRef } from 'react';
-import SideBar from './Components/Sidebar'; // Your original Sidebar
 import MainBar from './Components/Mainbar';   // Your original Mainbar
 import './App.css'; // Assuming you have some basic styling
 
@@ -26,7 +25,6 @@ function App() {
     const [inputValue, setInputValue] = useState('');
     const [charCount, setCharCount] = useState(0);
     const [isLoading, setIsLoading] = useState(false);
-    const [sidebarExtended, setSidebarExtended] = useState(false);
     const chatHistoryRef = useRef(null);
 
     // Fetch initial chat data and ensure CSRF cookie is set
@@ -124,21 +122,49 @@ function App() {
         }
     };
 
-    const handleNewChat = () => {
-        setMessages([]); // Clear current messages
-        setInputValue(''); // Clear input field
-        setCharCount(0); // Reset character count
-        // Optionally, you could also send a signal to the backend to reset conversation history there
-        console.log("New chat started");
-        // fetchChatData(); // Or fetch any initial message if your backend supports it for a new chat
+    const handleNewChat = async () => {
+        try {
+            const csrftoken = getCookie('csrftoken');
+            if (!csrftoken) {
+                console.error("CSRF token not found for new chat request.");
+                // Still clear the frontend even if we can't call backend
+                setMessages([]);
+                setInputValue('');
+                setCharCount(0);
+                return;
+            }
+
+            const response = await fetch(`${API_BASE_URL}/new-chat/`, {
+                method: 'POST',
+                credentials: 'include',
+                headers: {
+                    'X-CSRFToken': csrftoken,
+                    'Content-Type': 'application/json',
+                },
+            });
+            if (response.ok) {
+                setMessages([]); // Clear current messages
+                setInputValue(''); // Clear input field
+                setCharCount(0); // Reset character count
+                console.log("New chat started");
+            } else {
+                console.error("Failed to start new chat:", response.status);
+                // Still clear the frontend
+                setMessages([]);
+                setInputValue('');
+                setCharCount(0);
+            }
+        } catch (error) {
+            console.error("Failed to start new chat:", error);
+            // Still clear the frontend even if backend call fails
+            setMessages([]);
+            setInputValue('');
+            setCharCount(0);
+        }
     };
 
     return (
         <>
-            <SideBar 
-                handleNewChat={handleNewChat} 
-                onToggle={setSidebarExtended}
-            />
             <MainBar
                 messages={messages}
                 inputValue={inputValue}
@@ -146,7 +172,7 @@ function App() {
                 onInputChange={handleInputChange}
                 onSendMessage={handleSendMessage}
                 isLoading={isLoading}
-                sidebarExtended={sidebarExtended}
+                onNewChat={handleNewChat}
             />
         </>
     );

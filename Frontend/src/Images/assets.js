@@ -14,6 +14,7 @@ import send_icon from './send_icon.png';
 import setting_icon from './setting_icon.png';
 import user_icon from './user_icon.png';
 import youtube_icon from './youtube_icon.png';
+import advisorop_logo from './advisorop-logo.jpg';
 
 export const assets = {
     bulb_icon,
@@ -32,4 +33,5 @@ export const assets = {
     setting_icon,
     user_icon,
     youtube_icon,
+    advisorop_logo,
 };

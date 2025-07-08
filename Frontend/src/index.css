@@ -38,27 +38,40 @@ body {
   background-color: var(--primary-bg);
   color: var(--text-primary);
   overflow: hidden; /* Prevents scrollbars on the body itself */
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* Internet Explorer 10+ */
+}
+
+body::-webkit-scrollbar {
+  display: none; /* Hide scrollbar in webkit browsers */
 }
 
 #root {
   display: flex;
+  width: 100%;
   min-height: 100vh;
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* Internet Explorer 10+ */
 }
 
-/* Custom Scrollbar */
+#root::-webkit-scrollbar {
+  display: none; /* Hide scrollbar in webkit browsers */
+}
+
+/* Hide scrollbars only on body and root elements */
 ::-webkit-scrollbar {
-  width: 8px;
+  width: 0px;
+  background: transparent;
 }
 
 ::-webkit-scrollbar-track {
-  background: var(--secondary-bg);
+  background: transparent;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: var(--tertiary-bg);
-  border-radius: var(--border-radius-sm);
+  background: transparent;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--accent-color-2);
+  background: transparent;
 }

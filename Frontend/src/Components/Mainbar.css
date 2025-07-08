@@ -2,43 +2,58 @@
 
 .main {
   flex: 1;
+  width: 100%;
   height: 100vh;
   position: relative;
   background-color: var(--primary-bg);
   display: flex;
   flex-direction: column;
+  overflow: hidden; /* Prevent any scrolling on main container */
 }
 
 .main .nav {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-start;
   font-size: 22px;
   padding: 20px;
   color: var(--text-secondary);
   border-bottom: 1px solid var(--border-color);
 }
 
-.main .nav p {
-    font-weight: 500;
-    background: var(--accent-gradient);
-    background-clip: text;
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
+.nav-left {
+  display: flex;
+  align-items: center;
+  gap: 15px;
 }
 
-.main .nav img {
+.nav-left p {
+  margin: 0;
+  font-weight: 500;
+  background: var(--accent-gradient);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.logo {
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  border: 2px solid var(--accent-color-1);
-  padding: 2px;
+  cursor: pointer;
   transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+  object-fit: cover;
+  border: 2px solid var(--accent-color-1);
+  user-select: none; /* Prevent text selection */
 }
 
-.main .nav img:hover {
-    transform: scale(1.1);
-    box-shadow: 0 0 15px var(--glow-color);
+.logo:hover {
+  transform: scale(1.1);
+  box-shadow: 0 0 15px var(--glow-color);
+}
+
+.logo:active {
+  transform: scale(0.95);
 }
 
 .main-container {
@@ -47,14 +62,14 @@
   width: 100%;
   margin: 0 auto;
   padding: 0 20px 120px 20px; /* Bottom padding for input area */
-  overflow-y: auto;
   display: flex;
   flex-direction: column;
+  height: calc(100vh - 80px); /* Full height minus nav bar */
 }
 
 .greet {
   margin: 50px 0;
-  font-size: 56px;
+  font-size: 32px;
   color: var(--text-secondary);
   font-weight: 500;
   padding: 20px;
@@ -74,6 +89,26 @@
     display: flex;
     flex-direction: column;
     gap: 20px;
+    flex: 1;
+    overflow-y: auto; /* Enable scrolling for chat messages */
+    scrollbar-width: none; /* Hide scrollbar in Firefox */
+    -ms-overflow-style: none; /* Hide scrollbar in IE */
+    scroll-behavior: smooth; /* Smooth scrolling */
+}
+
+.chat-messages::-webkit-scrollbar {
+    display: none; /* Hide scrollbar in webkit browsers */
+}
+
+/* Optional: Add a subtle fade effect at the top when scrolled */
+.chat-messages::before {
+    content: '';
+    position: sticky;
+    top: 0;
+    height: 20px;
+    background: linear-gradient(to bottom, var(--primary-bg), transparent);
+    z-index: 1;
+    pointer-events: none;
 }
 
 .message {
@@ -87,12 +122,6 @@
     justify-content: flex-end;
 }
 
-.message-icon {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-}
-
 .message-content {
     max-width: 75%;
     padding: 15px 20px;
@@ -103,13 +132,13 @@
 
 .ai-message .message-content {
     background-color: var(--secondary-bg);
-    border-top-left-radius: 0;
+    border-top-left-radius: var(--border-radius-lg);
 }
 
 .user-message .message-content {
     background: var(--accent-gradient);
     color: var(--text-primary);
-    border-top-right-radius: 0;
+    border-top-right-radius: var(--border-radius-lg);
 }
 
 .loading-indicator {
@@ -132,16 +161,11 @@
 .main-bottom {
   position: fixed;
   bottom: 0;
-  left: 70px; /* Account for collapsed sidebar width */
+  left: 0;
   right: 0;
   padding: 20px;
   background-color: var(--primary-bg);
   border-top: 1px solid var(--border-color);
-  transition: left var(--transition-medium);
-}
-
-.main-bottom.extended-sidebar {
-  left: 250px; /* When sidebar is extended */
 }
 
 .search {
@@ -161,7 +185,7 @@
     box-shadow: 0 0 10px var(--glow-color);
 }
 
-.search input {
+.search textarea {
   flex: 1;
   background: transparent;
   border: none;
@@ -170,9 +194,14 @@
   font-size: 18px;
   color: var(--text-primary);
   font-family: var(--font-family);
+  resize: none;
+  min-height: 24px;
+  max-height: 120px;
+  overflow-y: auto;
+  line-height: 1.4;
 }
 
-.search input::placeholder {
+.search textarea::placeholder {
     color: var(--text-placeholder);
 }
 
